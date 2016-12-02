@@ -6,24 +6,26 @@ def getFeeds(subscriptions):
     return feeds
 
 
+def feedTitle(feeds, n):
+    return feeds[n]['feed']['title']
+
+def feedSubTitle(feeds, n):
+    return feeds[n]['feed']['subtitle']
+
+def episodeTitle(feeds, n, i):
+    return feeds[n].entries[i]['title']
+
+def episodeSubTitle(feeds, n, i):
+    return feeds[n].entries[i]['subtitle']
+
+def audiolink(feeds, n, i):
+    return[di['href'] for di in feeds[n].entries[i].links if di['rel'] == 'enclosure'][0]
+
+def duration(feeds, n, i):
+    return feeds[n].entries[i]['itunes_duration']
+
 def download(feeds, n, i):
-    print('Titre : ')
-    print(feeds[n]['feed']['title'])
-
-    print('Sous titre ')
-    print(feeds[n]['feed']['subtitle'])
-
-    print('Nombre d\'épisodes :')
-    print(len(feeds[n]['entries']))
-
-    print('Episode n°%d :' % i)
-    print(feeds[n].entries[i]['title'])
-    print(feeds[n].entries[i]['subtitle'])
-
-    podfile = [di['href'] for di in feeds[n].entries[i].links if di['rel'] == 'enclosure'][0]
-
-
-
+    podfile = audiolink(feeds, n, i)
     print("Downloading file")
 
     def reportHook(count, blockSize, totalSize):
