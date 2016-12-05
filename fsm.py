@@ -1,5 +1,6 @@
 from feed import *
 import tts
+from mpd import MPDClient
 
 KEY_0 = 0
 KEY_1 = 1
@@ -36,8 +37,12 @@ state=0
 cf=None                 # current feed
 ce=None                 # current episode
 
+client = MPDClient()
+client.connect("localhost", 6600)
+
+
 def key(k):
-    global feeds, state, cf, ce
+    global feeds, state, cf, ce, client
     try:
         if k == KEY_DIV:
             tts.say("Menu principal")
@@ -46,10 +51,23 @@ def key(k):
             ce=None
             return
 
+        if k == KEY_MULT:
+            client.pause()
+            return
+
         if k == KEY_ENTER and cf != None and ce != None:
             tts.say("Téléchargement du podcast")
             download(feeds, cf, ce)
             tts.say("Podcast téléchargé")
+            client.stop()
+            client.clear()
+            client.update()
+            print("podcast%d-%d.mp3" % (cf, ce))
+            client.add("podcast%d-%d.mp3" % (cf, ce))
+            import time
+            time.sleep(5)
+            print("play")
+            client.play()
             return
 
         if k == KEY_DOT:
