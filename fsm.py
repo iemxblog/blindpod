@@ -1,6 +1,7 @@
 from feed import *
 import tts
 from mpd import MPDClient
+import time
 
 KEY_0 = 0
 KEY_1 = 1
@@ -62,9 +63,9 @@ def key(k):
             client.stop()
             client.clear()
             client.update()
+            time.sleep(1) # wait until update is finished (find a better solution with mpd library ?)
             print("podcast%d-%d.mp3" % (cf, ce))
             client.add("podcast%d-%d.mp3" % (cf, ce))
-            import time
             time.sleep(5)
             print("play")
             client.play()
